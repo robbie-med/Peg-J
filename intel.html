@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PEG-J Home Guide</title>
+  <meta name="description" content="Patient-friendly PEG-J venting, feeds, constipation guide with checklists and persistent notes." />
+
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#111a2e;
+      --panel2:#0f1730;
+      --text:#e7eefc;
+      --muted:#a8b6d9;
+      --accent:#6ea8fe;
+      --good:#3ddc97;
+      --warn:#ffd166;
+      --bad:#ff6b6b;
+      --border:rgba(255,255,255,.10);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+      --radius2:12px;
+      --tap:52px;
+      --max: 980px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    * { box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: var(--font);
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 20% 0%, rgba(110,168,254,.25), transparent 55%),
+                  radial-gradient(900px 700px at 90% 10%, rgba(61,220,151,.12), transparent 55%),
+                  linear-gradient(180deg, var(--bg), #070b14 70%);
+      min-height: 100vh;
+    }
+    a{ color: var(--accent); }
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 18px 14px 40px;
+    }
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(11,18,32,.92), rgba(11,18,32,.70));
+      border-bottom: 1px solid var(--border);
+    }
+    .head-inner{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 14px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width: 0;
+    }
+    .title h1{
+      font-size: 18px;
+      margin:0;
+      line-height:1.15;
+      letter-spacing:.2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .title p{
+      margin:0;
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pillbar{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      align-items:center;
+    }
+    .pill{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      line-height: 1;
+      min-height: 42px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .05s ease, background .2s ease, border-color .2s ease;
+    }
+    .pill:active{ transform: scale(.99); }
+    .pill:hover{ background: rgba(255,255,255,.08); }
+    .pill svg{ width: 16px; height:16px; opacity:.9; }
+    .badge{
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: rgba(255,255,255,.04);
+    }
+
+    .grid{
+      display:grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(17,26,46,.95), rgba(15,23,48,.95));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .top{
+      padding: 14px 14px 10px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      justify-content:space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .card .top h2{
+      margin:0;
+      font-size: 16px;
+      line-height: 1.2;
+    }
+    .card .top .sub{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height:1.35;
+    }
+    .card .body{
+      padding: 12px 14px 14px;
+    }
+
+    /* Accordion */
+    details{
+      border-top: 1px solid var(--border);
+    }
+    details:first-of-type{ border-top: 0; }
+    summary{
+      list-style:none;
+      cursor:pointer;
+      padding: 14px 14px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      min-height: var(--tap);
+      user-select:none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    .sum-left{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      min-width: 0;
+    }
+    .chev{
+      width: 18px;
+      height: 18px;
+      flex:0 0 auto;
+      opacity:.9;
+      transition: transform .2s ease;
+    }
+    details[open] .chev{ transform: rotate(90deg); }
+    .sum-title{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width:0;
+    }
+    .sum-title strong{
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sum-title span{
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .content{
+      padding: 0 14px 14px;
+      color: var(--text);
+    }
+    .content p{
+      margin: 10px 0;
+      color: var(--text);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+    .content ul{
+      margin: 10px 0 0 18px;
+      padding:0;
+      color: var(--text);
+      line-height:1.45;
+      font-size:14px;
+    }
+    .callout{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      border-radius: var(--radius2);
+      padding: 12px 12px;
+      margin-top: 10px;
+    }
+    .callout.good{ border-color: rgba(61,220,151,.35); }
+    .callout.warn{ border-color: rgba(255,209,102,.35); }
+    .callout.bad{ border-color: rgba(255,107,107,.35); }
+    .callout h3{
+      margin:0 0 6px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: .2px;
+      text-transform: uppercase;
+    }
+    .callout p{ margin: 6px 0; font-size: 14px; color: var(--text); }
+
+    /* Checklist */
+    .checklist{
+      display:grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .item{
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      border-radius: var(--radius2);
+      padding: 12px 12px;
+      min-height: var(--tap);
+    }
+    .item input{
+      width: 22px;
+      height: 22px;
+      margin-top: 2px;
+      flex: 0 0 auto;
+      accent-color: var(--accent);
+    }
+    .item label{
+      cursor:pointer;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+    .item small{
+      display:block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+      line-height:1.35;
+    }
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top: 10px;
+    }
+    .btn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      min-height: 44px;
+      font-size: 13px;
+      user-select:none;
+    }
+    .btn:hover{ background: rgba(255,255,255,.09); }
+    .btn:active{ transform: scale(.99); }
+    .btn.danger{ border-color: rgba(255,107,107,.35); }
+    .btn.good{ border-color: rgba(61,220,151,.35); }
+
+    /* Notes */
+    textarea{
+      width: 100%;
+      min-height: 160px;
+      resize: vertical;
+      border-radius: var(--radius2);
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      padding: 12px 12px;
+      font-size: 14px;
+      line-height: 1.4;
+      outline: none;
+    }
+    textarea:focus{ border-color: rgba(110,168,254,.5); }
+
+    .footer{
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+      padding: 0 2px;
+    }
+
+    /* Modal */
+    dialog{
+      width: min(680px, calc(100vw - 18px));
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(17,26,46,.98), rgba(15,23,48,.98));
+      color: var(--text);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 0;
+    }
+    dialog::backdrop{
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(3px);
+    }
+    .modal-head{
+      padding: 14px 14px;
+      border-bottom: 1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .modal-head h3{
+      margin:0;
+      font-size: 15px;
+    }
+    .modal-body{
+      padding: 12px 14px 14px;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .k{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      padding: 10px 10px;
+      border-radius: 12px;
+      overflow:auto;
+      white-space: pre;
+      max-height: 260px;
+    }
+
+    @media (min-width: 780px){
+      .grid{ grid-template-columns: 1fr 1fr; }
+      .span2{ grid-column: span 2; }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="head-inner">
+    <div class="title">
+      <h1>PEG-J Home Guide</h1>
+      <p>Venting • Feeds • Constipation • Notes (saved on this device)</p>
+    </div>
+
+    <div class="pillbar">
+      <div class="badge" id="saveStatus">Saved</div>
+      <button class="pill" id="openQuick">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Quick help
+      </button>
+      <button class="pill" id="openData">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M8 7h12M8 12h12M8 17h12M4 7h.01M4 12h.01M4 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Backup
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="grid">
+
+    <!-- Card: What this is -->
+    <section class="card span2">
+      <div class="top">
+        <div>
+          <h2>What’s happening (simple explanation)</h2>
+          <p class="sub">
+            Your stomach has been under-used for a while. It can feel tight and overfull even with small amounts.
+            Venting is a normal, helpful tool while your stomach re-conditions over time.
+          </p>
+        </div>
+      </div>
+
+      <details open>
+        <summary>
+          <div class="sum-left">
+            <svg class="chev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="sum-title">
+              <strong>Key idea</strong>
+              <span>Venting + slow changes + treating constipation</span>
+            </div>
+          </div>
+        </summary>
+        <div class="content">
+          <p>
+            Even when nutrition goes into the small intestine (J), the stomach still fills with swallowed air and normal secretions.
+            This can cause bloating, nausea, and reflux. Venting removes pressure and helps you feel better.
+          </p>
+          <div class="callout good">
+            <h3>Reassurance</h3>
+            <p>Needing frequent venting is expected during this phase. Stretching gently usually does not dislodge a PEG-J.</p>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- Card: Venting -->
+    <section class="card">
+      <div class="top">
+        <div>
+          <h2>Venting the G-port</h2>
+          <p class="sub">Do this whenever symptoms build. No strict limit.</p>
+        </div>
+      </div>
+
+      <details open>
+        <summary>
+          <div class="sum-left">
+            <svg class="chev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="sum-title">
+              <strong>When & how</strong>
+              <span>Symptom-driven venting</span>
+            </div>
+          </div>
+        </summary>
+        <div class="content">
+          <div class="checklist" data-list="venting">
+            <div class="item">
+              <input type="checkbox" id="v1" data-key="v1">
+              <label for="v1">
+                Sit upright or keep head of bed ≥30°
+                <small>Position helps reflux and drainage.</small>
+              </label>
+            </div>
+            <div class="item">
+              <input type="checkbox" id="v2" data-key="v2">
+              <label for="v2">
+                Open G-port to gravity (bag or container)
+                <small>Air bubbles/foamy fluid can be normal.</small>
+              </label>
+            </div>
+            <div class="item">
+              <input type="checkbox" id="v3" data-key="v3">
+              <label for="v3">
+                Vent 10–30 minutes, or until pressure improves
+                <small>Intermittent open/close is fine.</small>
+              </label>
+            </div>
+            <div class="item">
+              <input type="checkbox" id="v4" data-key="v4">
+              <label for="v4">
+                Vent anytime: bloating, pressure, nausea, reflux
+                <small>Some days this is frequent. That is okay.</small>
+              </label>
+            </div>
+          </div>
+
+          <div class="callout warn">
+            <h3>Equipment that helps</h3>
+            <p>Ask for a venting extension (ex: Farrell valve) and a gravity drainage bag. These make venting easier.</p>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- Card: Feeds -->
+    <section class="card">
+      <div class="top">
+        <div>
+          <h2>Tube feeds (J-port)</h2>
+          <p class="sub">Go slow. Vent first when symptoms flare.</p>
+        </div>
+      </div>
+
+      <details open>
+        <summary>
+          <div class="sum-left">
+            <svg class="chev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="sum-title">
+              <strong>Practical steps</strong>
+              <span>Adjust gently</span>
+            </div>
+          </div>
+        </summary>
+        <div class="content">
+          <div class="checklist" data-list="feeds">
+            <div class="item">
+              <input type="checkbox" id="f1" data-key="f1">
+              <label for="f1">
+                If reflux/bloating worsens: vent first
+                <small>Then resume feeds when pressure improves.</small>
+              </label>
+            </div>
+            <div class="item">
+              <input type="checkbox" id="f2" data-key="f2">
+              <label for="f2">
+                Make small rate changes (avoid big jumps)
+                <small>Improvement usually takes weeks.</small>
+              </label>
+            </div>
+            <div class="item">
+              <input type="checkbox" id="f3" data-key="f3">
+              <label for="f3">
+                Keep hydration/flushes consistent
+                <small>Flushes help prevent clogging and constipation.</small>
+              </label>
+            </div>
+          </div>
+
+          <div class="callout good">
+            <h3>Reminder</h3>
+            <p>Your J-feeds are your nutrition. Oral intake is for gentle re-training unless your team says otherwise.</p>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- Card: Constipation -->
+    <section class="card span2">
+      <div class="top">
+        <div>
+          <h2>Constipation plan (very common)</h2>
+          <p class="sub">Constipation can worsen bloating and reflux. Treating it often improves upper GI symptoms.</p>
+        </div>
+      </div>
+
+      <details open>
+        <summary>
+          <div class="sum-left">
+            <svg class="chev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="sum-title">
+              <strong>Miralax / PEG 3350</strong>
+              <span>Can be given via J-port</span>
+            </div>
+          </div>
+        </summary>
+        <div class="content">
+          <p><strong>Miralax (PEG 3350)</strong> is usually preferred because it causes less gas than lactulose.</p>
+
+          <div class="checklist" data-list="constipation-peg">
+            <div class="item">
+              <input type="checkbox" id="c1" data-key="c1">
+              <label for="c1">
+                Mix 17 g (1 capful) in 120–240 mL warm water until clear
+                <small>Do not put dry powder directly into the tube.</small>
+              </label>
+            </div>
+            <div class="item">
+              <input type="checkbox" id="c2" data-key="c2">
+              <label for="c2">
+                Flush J-port 30 mL water → give mixture → flush 30–60 mL
+                <small>Pause feeds briefly if needed, then resume.</small>
+              </label>
+            </div>
+            <div class="item">
+              <input type="checkbox" id="c3" data-key="c3">
+              <label for="c3">
+                Goal: soft BM every 1–2 days
+                <small>It may take 24–72 hours to work.</small>
+              </label>
+            </div>
+          </div>
+
+          <details>
+            <summary>
+              <div class="sum-left">
+                <svg class="chev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="sum-title">
+                  <strong>If Miralax isn’t enough</strong>
+                  <span>Options (ask your team)</span>
+                </div>
+              </div>
+            </summary>
+            <div class="content">
+              <div class="callout warn">
+                <h3>Lactulose</h3>
+                <p>Can work well but may cause gas. If used, start low and go slow. Vent before/after dosing.</p>
+              </div>
+              <div class="callout good">
+                <h3>Senna</h3>
+                <p>Often paired with Miralax. Tends to cause less gas than lactulose. Ask your team for dosing.</p>
+              </div>
+              <div class="callout bad">
+                <h3>Seek help</h3>
+                <p>If severe abdominal pain, marked swelling, vomiting that won’t stop, or no stool with worsening symptoms.</p>
+              </div>
+            </div>
+          </details>
+        </div>
+      </details>
+    </section>
+
+    <!-- Card: Oral intake -->
+    <section class="card">
+      <div class="top">
+        <div>
+          <h2>Oral intake (re-training)</h2>
+          <p class="sub">Small sips only unless your team says otherwise.</p>
+        </div>
+      </div>
+      <details open>
+        <summary>
+          <div class="sum-left">
+            <svg class="chev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="sum-title">
+              <strong>Rules</strong>
+              <span>Stop if symptoms worsen</span>
+            </div>
+          </div>
+        </summary>
+        <div class="content">
+          <div class="checklist" data-list="oral">
+            <div class="item">
+              <input type="checkbox" id="o1" data-key="o1">
+              <label for="o1">
+                Ice chips or small sips only
+                <small>Think “therapy,” not calories.</small>
+              </label>
+            </div>
+            <div class="item">
+              <input type="checkbox" id="o2" data-key="o2">
+              <label for="o2">
+                Stop if reflux, nausea, or pressure increases
+                <small>Venting may help after small sips.</small>
+              </label>
+            </div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- Card: Red flags -->
+    <section class="card">
+      <div class="top">
+        <div>
+          <h2>When to seek urgent care</h2>
+          <p class="sub">Red flags that need help now.</p>
+        </div>
+      </div>
+      <details open>
+        <summary>
+          <div class="sum-left">
+            <svg class="chev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="sum-title">
+              <strong>Go to ED / call now</strong>
+              <span>Safety checklist</span>
+            </div>
+          </div>
+        </summary>
+        <div class="content">
+          <div class="checklist" data-list="redflags">
+            <div class="item">
+              <input type="checkbox" id="r1" data-key="r1">
+              <label for="r1">
+                Persistent vomiting despite venting
+                <small>Especially if you can’t keep feeds down at all.</small>
+              </label>
+            </div>
+            <div class="item">
+              <input type="checkbox" id="r2" data-key="r2">
+              <label for="r2">
+                Severe abdominal pain or marked swelling
+                <small>Worsening distension is concerning.</small>
+              </label>
+            </div>
+            <div class="item">
+              <input type="checkbox" id="r3" data-key="r3">
+              <label for="r3">
+                Very low urine output + dehydration symptoms
+                <small>Dizziness, dry mouth, inability to hydrate.</small>
+              </label>
+            </div>
+            <div class="item">
+              <input type="checkbox" id="r4" data-key="r4">
+              <label for="r4">
+                Tube displacement, leakage, bleeding, or sudden new pain at site
+                <small>Seek help promptly.</small>
+              </label>
+            </div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- Card: Notes -->
+    <section class="card span2">
+      <div class="top">
+        <div>
+          <h2>My notes (saved on this device)</h2>
+          <p class="sub">Write anything you want here: symptoms, venting times, what helped, questions for clinic.</p>
+        </div>
+      </div>
+      <div class="body">
+        <textarea id="notes" placeholder="Example: 'More bloating after 45 mL/hr. Venting helped after 15 min. Last BM 2 days ago...'"></textarea>
+        <div class="row">
+          <button class="btn good" id="copyNotes">Copy notes</button>
+          <button class="btn" id="clearChecks">Clear checkmarks</button>
+          <button class="btn danger" id="clearAll">Reset everything</button>
+        </div>
+        <div class="footer">
+          <strong>Privacy note:</strong> This page saves checkmarks and notes in your browser’s local storage.
+          It does not upload to the internet. If you clear browser data or switch devices, the saved items may be lost
+          unless you export a backup.
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- Quick help modal -->
+<dialog id="quickDialog">
+  <div class="modal-head">
+    <h3>Quick help</h3>
+    <button class="btn" data-close="quickDialog">Close</button>
+  </div>
+  <div class="modal-body">
+    <div class="callout good">
+      <h3>Venting rule</h3>
+      <p>Vent whenever you feel pressure, bloating, reflux, or nausea. Some days it’s frequent. That’s okay.</p>
+    </div>
+    <div class="callout warn">
+      <h3>Constipation</h3>
+      <p>Constipation can worsen reflux and bloating. Miralax (PEG 3350) can be given via J-port if mixed fully in water.</p>
+    </div>
+    <div class="callout bad">
+      <h3>Go get help</h3>
+      <p>Severe pain, persistent vomiting, big swelling, very low urine output, tube problems, or inability to tolerate feeds.</p>
+    </div>
+  </div>
+</dialog>
+
+<!-- Backup modal -->
+<dialog id="dataDialog">
+  <div class="modal-head">
+    <h3>Backup (Export / Import)</h3>
+    <button class="btn" data-close="dataDialog">Close</button>
+  </div>
+  <div class="modal-body">
+    <p>
+      Use <strong>Export</strong> to save your checkmarks + notes as text (copy into Notes, email to yourself, etc).
+      Use <strong>Import</strong> to restore it later on the same or another device.
+    </p>
+    <div class="row">
+      <button class="btn good" id="exportBtn">Export</button>
+      <button class="btn" id="importBtn">Import</button>
+    </div>
+    <p style="margin-top:12px; color: var(--muted); font-size: 13px;">Exported data will appear below:</p>
+    <div class="k" id="exportBox" aria-label="Exported data"></div>
+  </div>
+</dialog>
+
+<script>
+(function(){
+  const STORAGE_KEY = "pegj_patient_guide_v1";
+
+  const saveStatus = document.getElementById("saveStatus");
+  const notes = document.getElementById("notes");
+
+  function nowStatus(txt){
+    saveStatus.textContent = txt;
+    saveStatus.style.opacity = "1";
+    window.clearTimeout(nowStatus._t);
+    nowStatus._t = window.setTimeout(()=>{ saveStatus.textContent = "Saved"; }, 900);
+  }
+
+  function getState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return { checks:{}, notes:"" };
+      const parsed = JSON.parse(raw);
+      return {
+        checks: parsed.checks || {},
+        notes: typeof parsed.notes === "string" ? parsed.notes : ""
+      };
+    }catch(e){
+      return { checks:{}, notes:"" };
+    }
+  }
+
+  function setState(state){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    nowStatus("Saved ✓");
+  }
+
+  function load(){
+    const state = getState();
+
+    // Restore checkboxes
+    document.querySelectorAll('input[type="checkbox"][data-key]').forEach(cb=>{
+      const key = cb.dataset.key;
+      cb.checked = !!state.checks[key];
+    });
+
+    // Restore notes
+    notes.value = state.notes || "";
+  }
+
+  function persist(){
+    const state = getState();
+    // Save checks
+    document.querySelectorAll('input[type="checkbox"][data-key]').forEach(cb=>{
+      state.checks[cb.dataset.key] = cb.checked;
+    });
+    // Save notes
+    state.notes = notes.value || "";
+    setState(state);
+  }
+
+  // Checkbox events
+  document.querySelectorAll('input[type="checkbox"][data-key]').forEach(cb=>{
+    cb.addEventListener("change", persist);
+  });
+
+  // Notes: debounce save
+  let t = null;
+  notes.addEventListener("input", ()=>{
+    saveStatus.textContent = "Saving…";
+    window.clearTimeout(t);
+    t = window.setTimeout(persist, 350);
+  });
+
+  // Buttons
+  document.getElementById("clearChecks").addEventListener("click", ()=>{
+    const state = getState();
+    state.checks = {};
+    setState(state);
+    load();
+  });
+
+  document.getElementById("clearAll").addEventListener("click", ()=>{
+    localStorage.removeItem(STORAGE_KEY);
+    nowStatus("Reset");
+    load();
+  });
+
+  document.getElementById("copyNotes").addEventListener("click", async ()=>{
+    try{
+      await navigator.clipboard.writeText(notes.value || "");
+      nowStatus("Copied ✓");
+    }catch(e){
+      // fallback
+      notes.select();
+      document.execCommand("copy");
+      nowStatus("Copied ✓");
+    }
+  });
+
+  // Modals
+  const quickDialog = document.getElementById("quickDialog");
+  const dataDialog  = document.getElementById("dataDialog");
+
+  document.getElementById("openQuick").addEventListener("click", ()=> quickDialog.showModal());
+  document.getElementById("openData").addEventListener("click", ()=> dataDialog.showModal());
+
+  document.querySelectorAll("[data-close]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-close");
+      const dlg = document.getElementById(id);
+      if(dlg) dlg.close();
+    });
+  });
+
+  // Export / Import
+  const exportBox = document.getElementById("exportBox");
+
+  function exportData(){
+    const state = getState();
+    // ensure current UI persisted
+    persist();
+    const out = {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      data: getState()
+    };
+    const text = btoa(unescape(encodeURIComponent(JSON.stringify(out))));
+    exportBox.textContent = text;
+    nowStatus("Exported ✓");
+  }
+
+  async function importData(){
+    const text = prompt("Paste the exported text here:");
+    if(!text) return;
+    try{
+      const json = decodeURIComponent(escape(atob(text.trim())));
+      const parsed = JSON.parse(json);
+      if(!parsed || !parsed.data) throw new Error("Invalid");
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed.data));
+      nowStatus("Imported ✓");
+      load();
+      exportBox.textContent = "";
+    }catch(e){
+      alert("Sorry — that import text did not work. Make sure you pasted the whole block.");
+    }
+  }
+
+  document.getElementById("exportBtn").addEventListener("click", exportData);
+  document.getElementById("importBtn").addEventListener("click", importData);
+
+  // Initial
+  load();
+})();
+</script>
+</body>
+</html>
